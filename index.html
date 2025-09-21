@@ -1,168 +1,137 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Code 點餐系統 - 沖天炮</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>串燒點餐系統  </title>
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script type="text/javascript">
-    (function(){
-      emailjs.init("7IZOtgPZQ7wPzRUOx"); // 換成你的 Public Key
-    })();
-  </script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>emailjs.init("7IZOtgPZQ7wPzRUOx");</script>
 
-  <style>
-    body {
-      font-family: "Microsoft JhengHei", Arial, sans-serif;
-      margin: 0; padding: 20px; background: #fffdf7; color: #333;
-    }
-    h1 { text-align: center; color: #d35400; margin-bottom: 20px; }
-    .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-width: 800px; margin: 0 auto; }
-    .menu-item { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; align-items: center; transition: transform 0.2s; }
-    .menu-item:hover { transform: translateY(-3px); }
-    .menu-item input { transform: scale(1.2); margin-right: 10px; }
-    .menu-item label { font-size: 16px; font-weight: bold; color: #444; }
-    button { display: block; margin: 30px auto; padding: 12px 30px; background: #e67e22; border: none; border-radius: 8px; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
-    button:hover { background: #d35400; }
-    #orderResult { display: flex; justify-content: center; margin-top: 20px; }
-    .ticket { border: 3px dashed #333; padding: 20px; text-align: center; background: #fff; border-radius: 15px; width: 300px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .ticket h2 { margin: 0; font-size: 60px; color: #e60000; }
-    .ticket p { margin: 8px 0; font-size: 18px; }
-    .ticket p.notice { color: #888; font-size: 14px; }
-  </style>
+<style>
+body { font-family: "Microsoft JhengHei", Arial, sans-serif; margin:0; padding:20px; background:#fffdf7; color:#333; }
+h1 { text-align:center; color:#d35400; margin-bottom:20px; }
+.menu { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:15px; max-width:1000px; margin:0 auto; }
+.menu-item { background:#fff; padding:10px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.menu-item img { width:120px; height:120px; object-fit:cover; border-radius:10px; margin-bottom:5px; }
+.menu-item label { display:block; font-weight:bold; margin-bottom:5px; }
+.menu-item .qty-controls { display:flex; justify-content:center; align-items:center; gap:10px; margin-bottom:5px; }
+.menu-item button { width:30px; height:30px; font-size:18px; cursor:pointer; }
+.menu-item span { min-width:30px; display:inline-block; text-align:center; font-weight:bold; }
+button#submitOrder { display:block; margin:30px auto; padding:12px 30px; background:#e67e22; border:none; border-radius:8px; color:#fff; font-size:18px; font-weight:bold; cursor:pointer; transition: background 0.3s; }
+button#submitOrder:hover { background:#d35400; }
+#orderResult { display:flex; justify-content:center; margin-top:20px; }
+.ticket { border:3px dashed #333; padding:20px; text-align:center; background:#fff; border-radius:15px; width:300px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
+.ticket h2 { margin:0; font-size:60px; color:#e60000; }
+.ticket p { margin:8px 0; font-size:18px; }
+.ticket p.notice { color:#888; font-size:14px; }
+</style>
 </head>
 <body>
-  <h1>🍢 串燒自助點餐系統</h1>
 
-  <form id="orderForm">
-    <div class="menu">
-      <!-- 新疆烤肉串 -->
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="牛肉串">
-        <label>牛肉串 - 30元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="羊肉串">
-        <label>羊肉串 - 30元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="豬肉串">
-        <label>豬肉串 - 30元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="雞肉串">
-        <label>雞肉串 - 30元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="香蔥雞腿肉串">
-        <label>香蔥雞腿肉串 - 50元/串</label>
-      </div>
+<h1>🍢 沖天炮點餐系統</h1>
 
-      <!-- 香腸 / 七里香 -->
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="黑豬肉香腸">
-        <label>黑豬肉香腸 - 40元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="七里香">
-        <label>七里香 - 40元/串</label>
-      </div>
+<form id="orderForm">
+<div class="menu" id="menuContainer">
+  <!-- 餐點列表會用 JS 生成 -->
+</div>
 
-      <!-- 其他小吃 -->
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="香酥豆皮">
-        <label>香酥豆皮 - 30元/串</label>
-      </div>
-      <div class="menu-item">
-        <input type="checkbox" name="items" value="古早味甜不辣">
-        <label>古早味甜不辣 - 30元/串</label>
-      </div>
+<button type="submit" id="submitOrder">送出訂單</button>
+</form>
+
+<div id="orderResult"></div>
+
+<script>
+let orderNumber = 1;
+
+// 餐點資料（名稱、價格、圖片）
+const menuData = [
+  {name:"牛肉串", price:30, img:"https://i.imgur.com/5eJq2Fs.jpg"},
+  {name:"羊肉串", price:30, img:"https://i.imgur.com/NkTzL2d.jpg"},
+  {name:"豬肉串", price:30, img:"https://i.imgur.com/x70qYeh.jpg"},
+  {name:"雞肉串", price:30, img:"https://i.imgur.com/fbT2qLK.jpg"},
+  {name:"香蔥雞腿肉串", price:50, img:"https://i.imgur.com/0LUKQd2.jpg"},
+  {name:"黑豬肉香腸", price:40, img:"https://i.imgur.com/igkMRt3.jpg"},
+  {name:"七里香", price:40, img:"https://i.imgur.com/P2Zcg2i.jpg"},
+  {name:"香酥豆皮", price:30, img:"https://i.imgur.com/8Rg7V5y.jpg"},
+  {name:"古早味甜不辣", price:30, img:"https://i.imgur.com/3gWqFxF.jpg"}
+];
+
+const prices = {};
+menuData.forEach(item => prices[item.name]=item.price);
+
+// 生成菜單 HTML
+const menuContainer = document.getElementById("menuContainer");
+menuData.forEach(item=>{
+  const div = document.createElement("div");
+  div.className="menu-item";
+  div.innerHTML = `
+    <img src="${item.img}" alt="${item.name}">
+    <label>${item.name} - ${item.price}元/串</label>
+    <div class="qty-controls">
+      <button type="button" class="minus">-</button>
+      <span class="qty">0</span>
+      <button type="button" class="plus">+</button>
     </div>
+  `;
+  menuContainer.appendChild(div);
 
-    <button type="submit">送出訂單</button>
-  </form>
+  const minusBtn = div.querySelector(".minus");
+  const plusBtn = div.querySelector(".plus");
+  const qtySpan = div.querySelector(".qty");
 
-  <div id="orderResult"></div>
+  minusBtn.addEventListener("click",()=>{ let n=parseInt(qtySpan.textContent); if(n>0) qtySpan.textContent=n-1; });
+  plusBtn.addEventListener("click",()=>{ let n=parseInt(qtySpan.textContent); qtySpan.textContent=n+1; });
+});
 
-  <script>
-    let orderNumber = 1;
+document.getElementById("orderForm").addEventListener("submit", function(e){
+  e.preventDefault();
 
-    // 價格表
-    const prices = {
-      "牛肉串":30, "羊肉串":30, "豬肉串":30, "雞肉串":30, "香蔥雞腿肉串":50,
-      "黑豬肉香腸":40, "七里香":40,
-      "香酥豆皮":30, "古早味甜不辣":30
-    };
+  let orderList = [];
+  let bbqCount=0, sausageCount=0, otherCount=0, totalPrice=0;
 
-    document.getElementById('orderForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+  document.querySelectorAll(".menu-item").forEach(div=>{
+    const name = div.querySelector("label").textContent.split(" - ")[0];
+    const qty = parseInt(div.querySelector(".qty").textContent);
+    for(let i=0;i<qty;i++) orderList.push(name);
 
-      const checkedItems = Array.from(document.querySelectorAll('input[name="items"]:checked'));
-      if (checkedItems.length === 0) {
-        alert("請選擇至少一個餐點！");
-        return;
-      }
+    // 統計
+    if(["牛肉串","羊肉串","豬肉串","雞肉串"].includes(name)) bbqCount += qty;
+    else if(["黑豬肉香腸","七里香"].includes(name)) sausageCount += qty;
+    else otherCount += qty;
+  });
 
-      let orderList = checkedItems.map(item => item.value);
+  // 計算總價
+  totalPrice += Math.floor(bbqCount/4)*100 + (bbqCount%4)*30;
+  totalPrice += Math.floor(sausageCount/3)*110 + (sausageCount%3)*40;
 
-      // 計算總價
-      let totalPrice = 0;
+  document.querySelectorAll(".menu-item").forEach(div=>{
+    const name = div.querySelector("label").textContent.split(" - ")[0];
+    if(["香蔥雞腿肉串","香酥豆皮","古早味甜不辣"].includes(name)){
+      const qty = parseInt(div.querySelector(".qty").textContent);
+      totalPrice += qty*prices[name];
+    }
+  });
 
-      // 新疆烤肉串混搭優惠
-      const bbqItems = ["牛肉串","羊肉串","豬肉串","雞肉串"];
-      let bbqCount = orderList.filter(i=>bbqItems.includes(i)).length;
-      totalPrice += Math.floor(bbqCount /4) * 100; // 每4串100元
-      let bbqRemainder = bbqCount % 4;
-      totalPrice += bbqRemainder * 30; // 剩下單價30元
+  let currentOrder = orderNumber++;
+  let ticketHTML = `<div class="ticket">
+    <p>取餐號碼</p>
+    <h2>${currentOrder}</h2>
+    <p>餐點：${orderList.join(", ")}</p>
+    <p>總價：${totalPrice} 元</p>
+    <p class="notice">📸 請截圖保存號碼牌</p>
+  </div>`;
+  document.getElementById("orderResult").innerHTML = ticketHTML;
 
-      // 香腸 / 七里香混搭優惠
-      const sausageItems = ["黑豬肉香腸","七里香"];
-      let sausageCount = orderList.filter(i=>sausageItems.includes(i)).length;
-      totalPrice += Math.floor(sausageCount /3) * 110; // 每3串110元
-      let sausageRemainder = sausageCount % 3;
-      totalPrice += sausageRemainder * 40;
+  // EmailJS
+  emailjs.send("service_wpxmlac","template_oevsgt5",{order_number:currentOrder, order_list:orderList.join(", "), total_price:totalPrice})
+    .then(response=>{console.log("✅ 訂單已寄出!"); alert("✅ 訂單已送出！店家已收到您的點餐");},
+          error=>{console.error(error); alert("❌ 訂單寄送失敗");});
 
-      // 其他小吃
-      const otherItems = ["香酥豆皮","古早味甜不辣","香蔥雞腿肉串"];
-      otherItems.forEach(item=>{
-        let count = orderList.filter(i=>i===item).length;
-        totalPrice += count * prices[item];
-      });
+  document.querySelectorAll(".menu-item .qty").forEach(span=>span.textContent="0");
+});
+</script>
 
-      // 生成顧客號碼
-      let currentOrder = orderNumber++;
-
-      let ticketHTML = `
-        <div class="ticket">
-          <p>取餐號碼</p>
-          <h2>${currentOrder}</h2>
-          <p>餐點：${orderList.join(", ")}</p>
-          <p>總價：${totalPrice} 元</p>
-          <p class="notice">📸 請截圖保存號碼牌</p>
-        </div>
-      `;
-      document.getElementById('orderResult').innerHTML = ticketHTML;
-
-      // EmailJS 送信
-      let templateParams = {
-        order_number: currentOrder,
-        order_list: orderList.join(", "),
-        total_price: totalPrice
-      };
-
-      emailjs.send("service_wpxmlac","template_oevsgt5",templateParams)
-        .then(response=>{
-          console.log("✅ 訂單已寄出!", response.status, response.text);
-          alert("✅ 訂單已送出！店家已收到您的點餐");
-        }, error=>{
-          console.error("❌ 寄送失敗...", error);
-          alert("❌ 抱歉，訂單寄送失敗，請再試一次");
-        });
-
-      // 清空表單
-      document.getElementById("orderForm").reset();
-    });
-  </script>
 </body>
 </html>
+
