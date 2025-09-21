@@ -5,65 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Code 點餐系統</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h1 { color: #333; }
-    .menu-item { margin-bottom: 10px; }
-    .menu-item label { margin-left: 5px; }
-    #orderResult { margin-top: 20px; font-weight: bold; }
+    body {
+      font-family: "Microsoft JhengHei", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #fffdf7;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #d35400;
+      margin-bottom: 20px;
+    }
 
-    /* 號碼牌樣式 */
-    .ticket {
+    /* 菜單區塊 */
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .menu-item {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .menu-item:hover {
+      transform: translateY(-3px);
+    }
+    .menu-item input {
+      transform: scale(1.2);
+      margin-right: 10px;
+    }
+    .menu-item label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #444;
+    }
+
+    /* 按鈕 */
+    button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      background: #e67e22;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #d35400;
+    }
+
+    /* 號碼牌 */
+    #orderResult {
+      display: flex;
+      justify-content: center;
       margin-top: 20px;
+    }
+    .ticket {
       border: 3px dashed #333;
       padding: 20px;
       text-align: center;
-      background: #f9f9f9;
-      border-radius: 10px;
-      width: 250px;
+      background: #fff;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .ticket h2 {
       margin: 0;
-      font-size: 50px;
+      font-size: 60px;
       color: #e60000;
     }
     .ticket p {
-      margin: 5px 0;
+      margin: 8px 0;
       font-size: 18px;
-      color: #333;
+    }
+    .ticket p.notice {
+      color: #888;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <h1>菜單</h1>
+  <h1>🍽️ 自助點餐系統</h1>
 
-  <!-- 點餐表單 -->
   <form id="orderForm">
-    <div class="menu-item">
-      <input type="checkbox" name="items" value="炒飯">
-      <label>炒飯 - 100元</label>
-    </div>
-    <div class="menu-item">
-      <input type="checkbox" name="items" value="牛肉麵">
-      <label>牛肉麵 - 150元</label>
-    </div>
-    <div class="menu-item">
-      <input type="checkbox" name="items" value="滷肉飯">
-      <label>滷肉飯 - 80元</label>
-    </div>
-    <div class="menu-item">
-      <input type="checkbox" name="items" value="珍珠奶茶">
-      <label>珍珠奶茶 - 60元</label>
+    <div class="menu">
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="炒飯">
+        <label>炒飯 - 100元</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="牛肉麵">
+        <label>牛肉麵 - 150元</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="滷肉飯">
+        <label>滷肉飯 - 80元</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="珍珠奶茶">
+        <label>珍珠奶茶 - 60元</label>
+      </div>
     </div>
 
-    <br>
     <button type="submit">送出訂單</button>
   </form>
 
-  <!-- 訂單結果 -->
   <div id="orderResult"></div>
 
   <script>
-    let orderNumber = 1; // 訂單流水號
+    let orderNumber = 1;
 
     document.getElementById('orderForm').addEventListener('submit', function(event) {
       event.preventDefault();
@@ -87,14 +149,15 @@
           <p>取餐號碼</p>
           <h2>${currentOrder}</h2>
           <p>餐點：${orderList.join(", ")}</p>
-          <p>請截圖保存號碼牌</p>
+          <p class="notice">📸 請截圖保存號碼牌</p>
         </div>
       `;
 
       document.getElementById('orderResult').innerHTML = ticketHTML;
 
-      // 將訂單內容輸出到 console (之後可以串接 EmailJS)
+      // 將訂單輸出到 console (未來可串接 EmailJS)
       console.log("寄出訂單：", `號碼 ${currentOrder}, 餐點：${orderList.join(", ")}`);
     });
   </script>
-</bod
+</body>
+</html>
