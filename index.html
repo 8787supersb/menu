@@ -11,7 +11,7 @@
     (function(){
       // 🔹 在這裡填入你的 Public Key
       // 例如：user_7x8y9z123
-      emailjs.init("你的_Public_Key");
+      emailjs.init("7IZOtgPZQ7wPzRUOx");
     })();
   </script>
 
@@ -104,7 +104,7 @@
         order_list: orderList.join(", ")
       };
 
-      emailjs.send("你的_Service_ID", "你的_Template_ID", templateParams)
+      emailjs.send("service_431tn0k", "template_oevsgt5", templateParams)
         .then(function(response) {
           console.log("✅ 訂單已寄出!", response.status, response.text);
           alert("✅ 訂單已送出！店家已收到您的點餐");
