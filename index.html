@@ -3,25 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Code 點餐系統</title>
+  <title>QR Code 點餐系統 - 沖天炮</title>
 
-  <!-- EmailJS 套件 -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function(){
-      // 🔹 在這裡填入你的 Public Key
-      // 例如：user_7x8y9z123
-      emailjs.init("7IZOtgPZQ7wPzRUOx");
+      emailjs.init("7IZOtgPZQ7wPzRUOx"); // 換成你的 Public Key
     })();
   </script>
 
   <style>
     body {
       font-family: "Microsoft JhengHei", Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #fffdf7;
-      color: #333;
+      margin: 0; padding: 20px; background: #fffdf7; color: #333;
     }
     h1 { text-align: center; color: #d35400; margin-bottom: 20px; }
     .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-width: 800px; margin: 0 auto; }
@@ -39,25 +33,50 @@
   </style>
 </head>
 <body>
-  <h1>🍽️ 自助點餐系統</h1>
+  <h1>🍢 串燒自助點餐系統</h1>
 
   <form id="orderForm">
     <div class="menu">
+      <!-- 新疆烤肉串 -->
       <div class="menu-item">
-        <input type="checkbox" name="items" value="炒飯">
-        <label>炒飯 - 100元</label>
+        <input type="checkbox" name="items" value="牛肉串">
+        <label>牛肉串 - 30元/串</label>
       </div>
       <div class="menu-item">
-        <input type="checkbox" name="items" value="牛肉麵">
-        <label>牛肉麵 - 150元</label>
+        <input type="checkbox" name="items" value="羊肉串">
+        <label>羊肉串 - 30元/串</label>
       </div>
       <div class="menu-item">
-        <input type="checkbox" name="items" value="滷肉飯">
-        <label>滷肉飯 - 80元</label>
+        <input type="checkbox" name="items" value="豬肉串">
+        <label>豬肉串 - 30元/串</label>
       </div>
       <div class="menu-item">
-        <input type="checkbox" name="items" value="珍珠奶茶">
-        <label>珍珠奶茶 - 60元</label>
+        <input type="checkbox" name="items" value="雞肉串">
+        <label>雞肉串 - 30元/串</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="香蔥雞腿肉串">
+        <label>香蔥雞腿肉串 - 50元/串</label>
+      </div>
+
+      <!-- 香腸 / 七里香 -->
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="黑豬肉香腸">
+        <label>黑豬肉香腸 - 40元/串</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="七里香">
+        <label>七里香 - 40元/串</label>
+      </div>
+
+      <!-- 其他小吃 -->
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="香酥豆皮">
+        <label>香酥豆皮 - 30元/串</label>
+      </div>
+      <div class="menu-item">
+        <input type="checkbox" name="items" value="古早味甜不辣">
+        <label>古早味甜不辣 - 30元/串</label>
       </div>
     </div>
 
@@ -69,46 +88,74 @@
   <script>
     let orderNumber = 1;
 
+    // 價格表
+    const prices = {
+      "牛肉串":30, "羊肉串":30, "豬肉串":30, "雞肉串":30, "香蔥雞腿肉串":50,
+      "黑豬肉香腸":40, "七里香":40,
+      "香酥豆皮":30, "古早味甜不辣":30
+    };
+
     document.getElementById('orderForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const checkedItems = document.querySelectorAll('input[name="items"]:checked');
+      const checkedItems = Array.from(document.querySelectorAll('input[name="items"]:checked'));
       if (checkedItems.length === 0) {
         alert("請選擇至少一個餐點！");
         return;
       }
 
-      // 收集餐點
-      let orderList = [];
-      checkedItems.forEach(item => orderList.push(item.value));
+      let orderList = checkedItems.map(item => item.value);
+
+      // 計算總價
+      let totalPrice = 0;
+
+      // 新疆烤肉串混搭優惠
+      const bbqItems = ["牛肉串","羊肉串","豬肉串","雞肉串"];
+      let bbqCount = orderList.filter(i=>bbqItems.includes(i)).length;
+      totalPrice += Math.floor(bbqCount /4) * 100; // 每4串100元
+      let bbqRemainder = bbqCount % 4;
+      totalPrice += bbqRemainder * 30; // 剩下單價30元
+
+      // 香腸 / 七里香混搭優惠
+      const sausageItems = ["黑豬肉香腸","七里香"];
+      let sausageCount = orderList.filter(i=>sausageItems.includes(i)).length;
+      totalPrice += Math.floor(sausageCount /3) * 110; // 每3串110元
+      let sausageRemainder = sausageCount % 3;
+      totalPrice += sausageRemainder * 40;
+
+      // 其他小吃
+      const otherItems = ["香酥豆皮","古早味甜不辣","香蔥雞腿肉串"];
+      otherItems.forEach(item=>{
+        let count = orderList.filter(i=>i===item).length;
+        totalPrice += count * prices[item];
+      });
 
       // 生成顧客號碼
       let currentOrder = orderNumber++;
 
-      // 建立號碼牌
       let ticketHTML = `
         <div class="ticket">
           <p>取餐號碼</p>
           <h2>${currentOrder}</h2>
           <p>餐點：${orderList.join(", ")}</p>
+          <p>總價：${totalPrice} 元</p>
           <p class="notice">📸 請截圖保存號碼牌</p>
         </div>
       `;
       document.getElementById('orderResult').innerHTML = ticketHTML;
 
-      // 🔹 在這裡填入你的 Service ID 和 Template ID
-      // Service ID 例如：service_xxx123
-      // Template ID 例如：template_abc456
+      // EmailJS 送信
       let templateParams = {
         order_number: currentOrder,
-        order_list: orderList.join(", ")
+        order_list: orderList.join(", "),
+        total_price: totalPrice
       };
 
-      emailjs.send("service_wpxmlac", "template_oevsgt5", templateParams)
-        .then(function(response) {
+      emailjs.send("service_wpxmlac","template_oevsgt5",templateParams)
+        .then(response=>{
           console.log("✅ 訂單已寄出!", response.status, response.text);
           alert("✅ 訂單已送出！店家已收到您的點餐");
-        }, function(error) {
+        }, error=>{
           console.error("❌ 寄送失敗...", error);
           alert("❌ 抱歉，訂單寄送失敗，請再試一次");
         });
@@ -119,4 +166,3 @@
   </script>
 </body>
 </html>
-
