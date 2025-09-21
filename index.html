@@ -1,39 +1,100 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QR 點餐 - 範例菜單</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- 修改下面電子郵件為你的接單信箱 -->
-  <meta name="merchant-email" content="8787supersb@gmail.com" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code 點餐系統</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { color: #333; }
+    .menu-item { margin-bottom: 10px; }
+    .menu-item label { margin-left: 5px; }
+    #orderResult { margin-top: 20px; font-weight: bold; }
+
+    /* 號碼牌樣式 */
+    .ticket {
+      margin-top: 20px;
+      border: 3px dashed #333;
+      padding: 20px;
+      text-align: center;
+      background: #f9f9f9;
+      border-radius: 10px;
+      width: 250px;
+    }
+    .ticket h2 {
+      margin: 0;
+      font-size: 50px;
+      color: #e60000;
+    }
+    .ticket p {
+      margin: 5px 0;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <h1>📱 掃碼點餐 | 沖天炮</h1>
-  </header>
+  <h1>菜單</h1>
 
-  <main class="container">
-    <section id="menu-section">
-      <h2>菜單</h2>
-      <div id="menu" class="menu-grid" aria-live="polite"></div>
-    </section>
+  <!-- 點餐表單 -->
+  <form id="orderForm">
+    <div class="menu-item">
+      <input type="checkbox" name="items" value="炒飯">
+      <label>炒飯 - 100元</label>
+    </div>
+    <div class="menu-item">
+      <input type="checkbox" name="items" value="牛肉麵">
+      <label>牛肉麵 - 150元</label>
+    </div>
+    <div class="menu-item">
+      <input type="checkbox" name="items" value="滷肉飯">
+      <label>滷肉飯 - 80元</label>
+    </div>
+    <div class="menu-item">
+      <input type="checkbox" name="items" value="珍珠奶茶">
+      <label>珍珠奶茶 - 60元</label>
+    </div>
 
-    <aside id="cart-section">
-      <h2>購物車</h2>
-      <div id="cart-list">（尚無選購）</div>
-      <div id="cart-summary" class="summary">
-        <div>總計：<span id="total">NT$0</span></div>
-        <button id="clear-cart" class="btn">清空</button>
-        <button id="checkout" class="btn primary">送出訂單</button>
-      </div>
-    </aside>
-  </main>
+    <br>
+    <button type="submit">送出訂單</button>
+  </form>
 
-  <footer class="footer">
-    <small></small>
-  </footer>
+  <!-- 訂單結果 -->
+  <div id="orderResult"></div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <script>
+    let orderNumber = 1; // 訂單流水號
+
+    document.getElementById('orderForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const checkedItems = document.querySelectorAll('input[name="items"]:checked');
+      if (checkedItems.length === 0) {
+        alert("請選擇至少一個餐點！");
+        return;
+      }
+
+      // 收集餐點
+      let orderList = [];
+      checkedItems.forEach(item => orderList.push(item.value));
+
+      // 生成顧客號碼
+      let currentOrder = orderNumber++;
+
+      // 建立號碼牌
+      let ticketHTML = `
+        <div class="ticket">
+          <p>取餐號碼</p>
+          <h2>${currentOrder}</h2>
+          <p>餐點：${orderList.join(", ")}</p>
+          <p>請截圖保存號碼牌</p>
+        </div>
+      `;
+
+      document.getElementById('orderResult').innerHTML = ticketHTML;
+
+      // 將訂單內容輸出到 console (之後可以串接 EmailJS)
+      console.log("寄出訂單：", `號碼 ${currentOrder}, 餐點：${orderList.join(", ")}`);
+    });
+  </script>
+</bod
