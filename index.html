@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Code 點餐系統</title>
+
+  <!-- EmailJS 套件 -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+      // 🔹 在這裡填入你的 Public Key
+      // 例如：user_7x8y9z123
+      emailjs.init("你的_Public_Key");
+    })();
+  </script>
+
   <style>
     body {
       font-family: "Microsoft JhengHei", Arial, sans-serif;
@@ -12,88 +23,19 @@
       background: #fffdf7;
       color: #333;
     }
-    h1 {
-      text-align: center;
-      color: #d35400;
-      margin-bottom: 20px;
-    }
-
-    /* 菜單區塊 */
-    .menu {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .menu-item {
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      transition: transform 0.2s;
-    }
-    .menu-item:hover {
-      transform: translateY(-3px);
-    }
-    .menu-item input {
-      transform: scale(1.2);
-      margin-right: 10px;
-    }
-    .menu-item label {
-      font-size: 16px;
-      font-weight: bold;
-      color: #444;
-    }
-
-    /* 按鈕 */
-    button {
-      display: block;
-      margin: 30px auto;
-      padding: 12px 30px;
-      background: #e67e22;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #d35400;
-    }
-
-    /* 號碼牌 */
-    #orderResult {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .ticket {
-      border: 3px dashed #333;
-      padding: 20px;
-      text-align: center;
-      background: #fff;
-      border-radius: 15px;
-      width: 300px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    .ticket h2 {
-      margin: 0;
-      font-size: 60px;
-      color: #e60000;
-    }
-    .ticket p {
-      margin: 8px 0;
-      font-size: 18px;
-    }
-    .ticket p.notice {
-      color: #888;
-      font-size: 14px;
-    }
+    h1 { text-align: center; color: #d35400; margin-bottom: 20px; }
+    .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-width: 800px; margin: 0 auto; }
+    .menu-item { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); display: flex; align-items: center; transition: transform 0.2s; }
+    .menu-item:hover { transform: translateY(-3px); }
+    .menu-item input { transform: scale(1.2); margin-right: 10px; }
+    .menu-item label { font-size: 16px; font-weight: bold; color: #444; }
+    button { display: block; margin: 30px auto; padding: 12px 30px; background: #e67e22; border: none; border-radius: 8px; color: #fff; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+    button:hover { background: #d35400; }
+    #orderResult { display: flex; justify-content: center; margin-top: 20px; }
+    .ticket { border: 3px dashed #333; padding: 20px; text-align: center; background: #fff; border-radius: 15px; width: 300px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .ticket h2 { margin: 0; font-size: 60px; color: #e60000; }
+    .ticket p { margin: 8px 0; font-size: 18px; }
+    .ticket p.notice { color: #888; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -152,12 +94,29 @@
           <p class="notice">📸 請截圖保存號碼牌</p>
         </div>
       `;
-
       document.getElementById('orderResult').innerHTML = ticketHTML;
 
-      // 將訂單輸出到 console (未來可串接 EmailJS)
-      console.log("寄出訂單：", `號碼 ${currentOrder}, 餐點：${orderList.join(", ")}`);
+      // 🔹 在這裡填入你的 Service ID 和 Template ID
+      // Service ID 例如：service_xxx123
+      // Template ID 例如：template_abc456
+      let templateParams = {
+        order_number: currentOrder,
+        order_list: orderList.join(", ")
+      };
+
+      emailjs.send("你的_Service_ID", "你的_Template_ID", templateParams)
+        .then(function(response) {
+          console.log("✅ 訂單已寄出!", response.status, response.text);
+          alert("✅ 訂單已送出！店家已收到您的點餐");
+        }, function(error) {
+          console.error("❌ 寄送失敗...", error);
+          alert("❌ 抱歉，訂單寄送失敗，請再試一次");
+        });
+
+      // 清空表單
+      document.getElementById("orderForm").reset();
     });
   </script>
 </body>
 </html>
+
